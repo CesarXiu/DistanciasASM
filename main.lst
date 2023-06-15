@@ -51,39 +51,39 @@
     51                                 
     52 0000002E 0000000000000000        fileDesc dq 0
     53 00000036 0000000000000000        matriz db 0,0,0,0,0,0,0,0
-    54 0000003E 0000000000000000        charRead dq 0
-    55 00000046 4572726F72206F7065-     errMsgOpen db "Error opening file",LF,NULL
-    56 00000046 6E696E672066696C65-
-    57 00000046 0A00               
-    58 0000005A 4572726F7220726561-     errMSgWrite db "Error reading from file",LF,NULL
-    59 0000005A 64696E672066726F6D-
-    60 0000005A 2066696C650A00     
-    61 00000073 536920736520416272-     exito db "Si se Abrio el archivo",LF,LF,NULL
-    62 00000073 696F20656C20617263-
-    63 00000073 6869766F0A0A00     
-    64 0000008C 20456C20636F6E7465-     paso db " El contenido del archivo es: ",LF,LF,NULL
-    65 0000008C 6E69646F2064656C20-
-    66 0000008C 6172636869766F2065-
-    67 0000008C 733A200A0A00       
-    68 000000AD 0A2043455252414E44-     closef db LF," CERRANDO EL ARCHIVO ",LF,LF,NULL
-    69 000000AD 4F20454C2041524348-
-    70 000000AD 49564F200A0A00     
-    71                                 
+    54 0000003E 03                      tamanio db 3
+    55 0000003F 0000000000000000        charRead dq 0
+    56 00000047 4572726F72206F7065-     errMsgOpen db "Error opening file",LF,NULL
+    57 00000047 6E696E672066696C65-
+    58 00000047 0A00               
+    59 0000005B 4572726F7220726561-     errMSgWrite db "Error reading from file",LF,NULL
+    60 0000005B 64696E672066726F6D-
+    61 0000005B 2066696C650A00     
+    62 00000074 536920736520416272-     exito db "Si se Abrio el archivo",LF,LF,NULL
+    63 00000074 696F20656C20617263-
+    64 00000074 6869766F0A0A00     
+    65 0000008D 20456C20636F6E7465-     paso db " El contenido del archivo es: ",LF,LF,NULL
+    66 0000008D 6E69646F2064656C20-
+    67 0000008D 6172636869766F2065-
+    68 0000008D 733A200A0A00       
+    69 000000AE 0A2043455252414E44-     closef db LF," CERRANDO EL ARCHIVO ",LF,LF,NULL
+    70 000000AE 4F20454C2041524348-
+    71 000000AE 49564F200A0A00     
     72                                 
     73                                 
     74                                 
-    75                                 [section .bss]
-    76 00000000 <gap>                   readBuffer resb BUFF_SIZE
-    77                                 
+    75                                 
+    76                                 [section .bss]
+    77 00000000 <gap>                   readBuffer resb BUFF_SIZE
     78                                 
-    79                                 [section .text]
-    80                                 [global _start]
-    81                                  _start:
-    82                                 
+    79                                 
+    80                                 [section .text]
+    81                                 [global _start]
+    82                                  _start:
     83                                 
-    84 00000000 48C7C7[00000000]        mov rdi, header
-    85 00000007 E8E6000000              call printString
-    86                                 
+    84                                 
+    85 00000000 48C7C7[00000000]        mov rdi, header
+    86 00000007 E8EC000000              call printString
     87                                 
     88                                 
     89                                 
@@ -92,20 +92,20 @@
     92                                 
     93                                 
     94                                 
-    95                                  openInputFile:
-    96 0000000C 48C7C002000000          mov rax,SYS_open
-    97 00000013 48C7C7[00000000]        mov rdi,filename
-    98 0000001A 48C7C600000000          mov rsi, O_RONLY
-    99 00000021 0F05                    syscall
-   100                                 
-   101 00000023 4883F800                cmp rax,0
-   102 00000027 0F8C98000000            jl errorOpen
-   103                                 
-   104 0000002D 48890425[00000000]      mov qword[fileDesc],rax
-   105                                 
-   106 00000035 48C7C7[00000000]        mov rdi, exito
-   107 0000003C E8B1000000              call printString
-   108                                 
+    95                                 
+    96                                  openInputFile:
+    97 0000000C 48C7C002000000          mov rax,SYS_open
+    98 00000013 48C7C7[00000000]        mov rdi,filename
+    99 0000001A 48C7C600000000          mov rsi, O_RONLY
+   100 00000021 0F05                    syscall
+   101                                 
+   102 00000023 4883F800                cmp rax,0
+   103 00000027 0F8C9E000000            jl errorOpen
+   104                                 
+   105 0000002D 48890425[00000000]      mov qword[fileDesc],rax
+   106                                 
+   107 00000035 48C7C7[00000000]        mov rdi, exito
+   108 0000003C E8B7000000              call printString
    109                                 
    110                                 
    111                                 
@@ -117,126 +117,179 @@
    117                                 
    118                                 
    119                                 
-   120 00000041 48C7C000000000          mov rax, SYS_read
-   121 00000048 488B3C25[00000000]      mov rdi, qword[fileDesc]
-   122 00000050 48C7C6[00000000]        mov rsi, readBuffer
-   123 00000057 48C7C2FF000000          mov rdx, BUFF_SIZE
-   124 0000005E 0F05                    syscall
-   125                                 
-   126 00000060 4883F800                cmp rax,0
-   127 00000064 7C71                    jl errorOnRead
-   128                                 
+   120                                 
+   121 00000041 48C7C000000000          mov rax, SYS_read
+   122 00000048 488B3C25[00000000]      mov rdi, qword[fileDesc]
+   123 00000050 48C7C6[00000000]        mov rsi, readBuffer
+   124 00000057 48C7C2FF000000          mov rdx, BUFF_SIZE
+   125 0000005E 0F05                    syscall
+   126                                 
+   127 00000060 4883F800                cmp rax,0
+   128 00000064 7C77                    jl errorOnRead
    129                                 
    130                                 
-   131 00000066 48890425[00000000]      mov qword[charRead], rax
-   132 0000006E 48C7C7[00000000]        mov rdi, paso
-   133 00000075 E878000000              call printString
-   134                                 
+   131                                 
+   132 00000066 48890425[00000000]      mov qword[charRead], rax
+   133 0000006E 48C7C7[00000000]        mov rdi, paso
+   134 00000075 E87E000000              call printString
    135                                 
-   136 0000007A 48C7C6[00000000]        mov rsi,readBuffer
-   137 00000081 C6040600                mov byte[rsi+rax], NULL
-   138                                 
-   139 00000085 48C7C7[00000000]        mov rdi, readBuffer
-   140 0000008C 48C7C6[00000000]        mov rsi, matriz
-   141 00000093 488B1425[00000000]      mov rdx, qword[charRead]
-   142 0000009B E885000000              call generarMatriz
-   143                                  bpoint:
-   144 000000A0 48C7C7[00000000]        mov rdi, readBuffer
-   145 000000A7 E846000000              call printString
-   146                                 
-   147                                 
+   136                                 
+   137 0000007A 48C7C6[00000000]        mov rsi,readBuffer
+   138 00000081 C6040600                mov byte[rsi+rax], NULL
+   139                                 
+   140 00000085 48C7C7[00000000]        mov rdi, readBuffer
+   141 0000008C 48C7C6[00000000]        mov rsi, matriz
+   142 00000093 48C7C200000000          mov rdx, 0
+   143 0000009A 8A1425[00000000]        mov dl, byte[tamanio]
+   144 000000A1 E8(F6FFFFFF)            call generarMatriz
+   145                                  bpoint:
+   146 000000A6 48C7C7[00000000]        mov rdi, readBuffer
+   147 000000AD E846000000              call printString
    148                                 
    149                                 
-   150 000000AC 48C7C7[00000000]        mov rdi, closef
-   151 000000B3 E83A000000              call printString
-   152                                 
-   153                                 
-   154 000000B8 48C7C003000000          mov rax, SYS_close
-   155 000000BF 488B3C25[00000000]      mov rdi, qword[fileDesc]
-   156 000000C7 0F05                    syscall
-   157 000000C9 EB1A                    jmp last
-   158                                 
-   159                                 
-   160                                  errorOpen:
-   161 000000CB 48C7C7[00000000]        mov rdi, errMsgOpen
-   162 000000D2 E81B000000              call printString
-   163 000000D7 EB0C                    jmp last
-   164                                 
-   165                                  errorOnRead:
-   166 000000D9 48C7C7[00000000]        mov rdi,errMSgWrite
-   167 000000E0 E80D000000              call printString
-   168 000000E5 EBFE                    jmp last
-   169                                 
-   170                                 
-   171                                  last:
-   172 000000E7 48C7C03C000000          mov rax, SYS_exit
-   173 000000EE 48C7C700000000          mov rdi, EXIT_SUCCESS
-   174 000000F5 0F05                    syscall
-   175                                 
-   176                                 
+   150                                 
+   151                                 
+   152 000000B2 48C7C7[00000000]        mov rdi, closef
+   153 000000B9 E83A000000              call printString
+   154                                 
+   155                                 
+   156 000000BE 48C7C003000000          mov rax, SYS_close
+   157 000000C5 488B3C25[00000000]      mov rdi, qword[fileDesc]
+   158 000000CD 0F05                    syscall
+   159 000000CF EB1A                    jmp last
+   160                                 
+   161                                 
+   162                                  errorOpen:
+   163 000000D1 48C7C7[00000000]        mov rdi, errMsgOpen
+   164 000000D8 E81B000000              call printString
+   165 000000DD EB0C                    jmp last
+   166                                 
+   167                                  errorOnRead:
+   168 000000DF 48C7C7[00000000]        mov rdi,errMSgWrite
+   169 000000E6 E80D000000              call printString
+   170 000000EB EBFE                    jmp last
+   171                                 
+   172                                 
+   173                                  last:
+   174 000000ED 48C7C03C000000          mov rax, SYS_exit
+   175 000000F4 48C7C700000000          mov rdi, EXIT_SUCCESS
+   176 000000FB 0F05                    syscall
    177                                 
    178                                 
-   179                                 [global printString]
-   180                                 printString:
-   181                                 
-   182 000000F7 53                      push rbx
+   179                                 
+   180                                 
+   181                                 [global printString]
+   182                                 printString:
    183                                 
-   184                                 
-   185 000000F8 4889FB                  mov rbx, rdi
-   186 000000FB 48C7C200000000          mov rdx, 0
-   187                                  countStrLoop:
-   188 00000102 803B00                  cmp byte[rbx],NULL
-   189 00000105 7406                    je countStrDone
-   190 00000107 48FFC2                  inc rdx
-   191 0000010A 48FFC3                  inc rbx
-   192 0000010D EBF1                    jmp countStrLoop
-   193                                 
-   194                                  countStrDone:
-   195 0000010F 4883FA00                cmp rdx,0
-   196 00000113 7411                    je prtDone
-   197                                 
-   198                                 
-   199 00000115 48C7C001000000          mov rax, SYS_write
-   200 0000011C 4889FE                  mov rsi,rdi
-   201 0000011F 48C7C701000000          mov rdi,STDOUT
-   202                                 
-   203 00000126 0F05                    syscall
+   184 000000FD 53                      push rbx
+   185                                 
+   186                                 
+   187 000000FE 4889FB                  mov rbx, rdi
+   188 00000101 48C7C200000000          mov rdx, 0
+   189                                  countStrLoop:
+   190 00000108 803B00                  cmp byte[rbx],NULL
+   191 0000010B 7406                    je countStrDone
+   192 0000010D 48FFC2                  inc rdx
+   193 00000110 48FFC3                  inc rbx
+   194 00000113 EBF1                    jmp countStrLoop
+   195                                 
+   196                                  countStrDone:
+   197 00000115 4883FA00                cmp rdx,0
+   198 00000119 7411                    je prtDone
+   199                                 
+   200                                 
+   201 0000011B 48C7C001000000          mov rax, SYS_write
+   202 00000122 4889FE                  mov rsi,rdi
+   203 00000125 48C7C701000000          mov rdi,STDOUT
    204                                 
-   205                                 
+   205 0000012C 0F05                    syscall
    206                                 
-   207                                  prtDone:
-   208 00000128 5B                      pop rbx
-   209 00000129 C3                      ret
-   210                                 
-   211                                 
+   207                                 
+   208                                 
+   209                                  prtDone:
+   210 0000012E 5B                      pop rbx
+   211 0000012F C3                      ret
    212                                 
    213                                 
-   214                                 [global generarMatriz]
-   215                                 generarMatriz:
-   216                                 
-   217                                 
-   218                                 
-   219 0000012A 53                      push rbx
-   220 0000012B 48C7C000000000          mov rax, 0
-   221 00000132 4889FB                  mov rbx, rdi
-   222 00000135 48C7C1FFFFFFFF          mov rcx, -1
-   223 0000013C 49C7C400000000          mov r12, 0
-   224                                  numerico:
-   225 00000143 48FFC1                  inc rcx
-   226                                  byteLeido:
-   227 00000146 4939D4                  cmp r12, rdx
-   228 00000149 741A                    je funcDone
-   229 0000014B 42803C2300              cmp byte[rbx+r12*1],0
-   230 00000150 74EF                    je numerico
-   231 00000152 428A0423                mov al, byte[rbx+r12*1]
-   232 00000156 2C30                    sub al, '0'
-   233 00000158 0004CE                  add byte[rsi+rcx*8], al
-   234 0000015B 48C7C000000000          mov rax, 0
-   235 00000162 49FFC4                  inc r12
-   236 00000165 EBDD                    jmp byteLeido
-   237                                 
-   238                                 
-   239                                  funcDone:
-   240 00000167 5B                      pop rbx
-   241 00000168 C3                      ret
-   242                                 
+   214                                 
+   215                                 
+   216                                 [section .data]
+   217 000000C7 FF                      n db -1
+   218 000000C8 00                      m db 0
+   219 000000C9 00                      k db 0
+   220 000000CA 000000                  element db 0,0,0
+   221                                 [global generarMatriz]
+   222                                  generarMatriz:
+   223                                 
+   224                                 
+   225                                 
+   226                                 
+   227 000000CD 53                      push rbx
+   228 000000CE 4154                    push r12
+   229 000000D0 4155                    push r13
+   230 000000D2 4156                    push r14
+   231                                 
+   232 000000D4 48C7C000000000          mov rax, 0
+   233 000000DB 4889FB                  mov rbx, rdi
+   234 000000DE 89D0                    mov eax, edx
+   235 000000E0 F7E2                    mul edx
+   236 000000E2 4889C1                  mov rcx, rax
+   237 000000E5 48C7C000000000          mov rax, 0
+   238 000000EC 48C7C200000000          mov rdx, 0
+   239 000000F3 49C7C4FFFFFFFF          mov r12, -1
+   240                                  elementos:
+   241 000000FA C60425[00000000]FF      mov byte[m], -1
+   242 00000102 FE0425[00000000]        inc byte[n]
+   243                                  cadena:
+   244 00000109 49FFC4                  inc r12
+   245 0000010C 428A04E3                mov al, byte[rbx+r12*8]
+   246 00000110 3C00                    cmp al, 0
+   247 00000112 741A                    je calculoCadena
+   248 00000114 2C30                    sub al, '0'
+   249 00000116 FE0425[00000000]        inc byte[m]
+   250 0000011D 49C7C5[00000000]        mov r13, m
+   251 00000124 428804ED[00000000]      mov byte[element+r13*8], al
+   252 0000012C EBD9                    jmp cadena
+   253                                  prev:
+   254 0000012E EBC8                    jmp elementos
+   255                                  calculoCadena:
+   256 00000130 803C25[00000000]00      cmp byte[m], 0
+   257 00000138 7462                    je fin
+   258                                  sumaElementos:
+   259 0000013A FE0425[00000000]        inc byte[k]
+   260 00000141 8A0425[00000000]        mov al, byte[m]
+   261 00000148 B30A                    mov bl, 10
+   262                                 
+   263                                  power_loop:
+   264 0000014A FEC8                    dec al
+   265 0000014C 3C00                    cmp al, 0
+   266 0000014E 7402                    je done
+   267 00000150 F6E3                    mul bl
+   268 00000152 EBF4                    jmp power_loop
+   269                                  done:
+   270 00000154 49C7C5[00000000]        mov r13, k
+   271 0000015B 88C2                    mov dl, al
+   272 0000015D 428A04ED[00000000]      mov al, byte[element+r13*8]
+   273 00000165 F6E2                    mul dl
+   274 00000167 428804ED[00000000]      mov byte[element+r13*8], al
+   275 0000016F FE0C25[00000000]        dec byte[m]
+   276 00000176 803C25[00000000]FF      cmp byte[m], -1
+   277 0000017E 7CB8                    jl sumaElementos
+   278 00000180 8A0425[00000000]        mov al, byte[element]
+   279 00000187 020425[08000000]        add al, byte[element+8]
+   280 0000018E 020425[10000000]        add al, byte[element+16]
+   281 00000195 EB05                    jmp fin
+   282                                  ElementoUnico:
+   283 00000197 8A0425[00000000]        mov al, byte[element]
+   284                                  fin:
+   285 0000019E 49C7C5[00000000]        mov r13, n
+   286 000001A5 428804EE                mov byte[rsi+r13*8], al
+   287 000001A9 E281                    loop prev
+   288                                 
+   289                                 
+   290                                  funcDone:
+   291 000001AB 415D                    pop r13
+   292 000001AD 415C                    pop r12
+   293 000001AF 5B                      pop rbx
+   294 000001B0 C3                      ret
+   295                                 
