@@ -385,7 +385,7 @@ printString:
     mov rbx, rdi                            ;Direccion del rdi a rbx
     mov rdx, 0                              ;Limpieamos el registro 
     countStrLoop:
-        cmp byte[rbx], NULL                 ;Comparamos si el valor es null, osea el fin de la cadena
+        cmp byte[rbx], NLUL                 ;Comparamos si el valor es null, osea el fin de la cadena
         je countStrDone                     ;Si es asi termina de leer
         inc rdx                             ;Aumentamos rdx
         inc rbx                             ;Aumentamos rbx
@@ -397,7 +397,7 @@ printString:
     ;Call OS to output string.
     mov rax, SYS_write                  ;System codo for write()
     mov rsi,rdi                         ;Address of chars to write
-    mov rdi,STDOUT                      ; standard out
+    mov rdi,STDOUT                      ;standard out
     syscall
     ;--------
     ;String printed, return to calling routine---prologue
@@ -792,7 +792,10 @@ global crear_matriz
             jmp zzero           ;Final
             zzero:              ;Si es solo un elemeneto 
             push rax            ;Se sube a la pila 
-
+            ;123
+            ;3 = 3*1
+            ;2 = 2*10
+            ;1 = 1*100
             inc r12             ;Incrementamos el contador de elementos
             dec r13             ;Decrementamos el puntero para leer en reversa
             jmp bucle_lectura   ;Sigue leyendo
@@ -815,16 +818,4 @@ global crear_matriz
         pop r13                 ;Prologo
         pop r12                 ;Prologo
         pop rbp                 ;Prologo
-    ret; Comprobar si el valor es un salto de línea (10)
-            je etiqueta_salto  ; Saltar al siguiente carácter si es un salto de línea
-            sub al, 48         ; Restar 48 para convertir el valor ASCII a decimal
-            mov byte [rsi], al ; Guardar el valor convertido en el segundo espacio reservado
-            inc rsi            ; Incrementar la dirección de memoria del segundo espacio reservado
-        etiqueta_salto:
-            inc rdi            ; Incrementar la dirección de memoria del primer espacio reservado
-            jmp bucle_lectura  ; Volver al inicio del bucle
-        etiqueta_salida:
-            mov byte [rsi], 0  ; Colocar un byte cero al final del segundo espacio reservado
-            ; Prologo
-        pop rbp
     ret
