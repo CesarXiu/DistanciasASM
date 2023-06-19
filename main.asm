@@ -385,7 +385,7 @@ printString:
     mov rbx, rdi                            ;Direccion del rdi a rbx
     mov rdx, 0                              ;Limpieamos el registro 
     countStrLoop:
-        cmp byte[rbx], NLUL                 ;Comparamos si el valor es null, osea el fin de la cadena
+        cmp byte[rbx], NULL                 ;Comparamos si el valor es null, osea el fin de la cadena
         je countStrDone                     ;Si es asi termina de leer
         inc rdx                             ;Aumentamos rdx
         inc rbx                             ;Aumentamos rbx
