@@ -430,7 +430,7 @@ global readString                       ;Esta funcion lee por teclado
             mov byte[rbx], al           ;De no ser asi el valor leido guarda en rbx
             inc rbx                     ;Incrementamos este mismo
             jmp readChars               ;Volvemos a la lectura de caracteres
-        readDone:                       ;Termino de leer
+        readDone:                       ;Termino de leer 
             mov byte[rbx], NULL         ;Una vez terminado se agrega un null al final de la cadena leida
             mov rbx, inline             ;Movemos la direccion a rbx donde guardamos
             mov dl, byte[rbx]           ;Leemos un byte
@@ -478,7 +478,7 @@ global coords                               ;Esta funcion encuentra el valor en 
             mov rdx, 0                      ;Inicializamos el valor en 0
             mov al, byte[rsi]               ;Tomamos el valor en Y
             mov bl, byte[rdi]               ;Tomamos el valor en X
-            mov rdx, 10                     ;Usaremos este valor para calcular la posicion en la matriz
+            moV rdx, 10                     ;Usaremos este valor para calcular la posicion en la matriz
             mul dl                          ;Se multiplica Y*10 para obtener la primera posicion en la fila indicada
             mov dl, 0                       ;Limpiamos el valor de dl 
             add al, bl                      ;Ahora sumamos el valor de Y mas X, calculando asi los bits a recorrer en la matriz
@@ -530,15 +530,15 @@ global calcEuclidian
         cvtsi2sd xmm0, eax                  ;Ahora convertimos el registro a otro de punto flotante
         sqrtsd xmm0, xmm0                   ;Hacemos la raiz, se guarda en xmm0
         mov rax, 0                  
-        cvttsd2si eax, xmm0                 ;Tomamos la parte entera 
-        mov qword[resEuclidianEntero], rax  ;Devuelve el valor de la parte entera
+        cvttsd2si eax, xmm0                 ;Tomamos la parte entera: 2.5 = 2
+        mov qword[resEuclidianEntero], rax  ;Devuelve el valor de la parte entera: 2.5 - 2 = 0.5 * 10000 = 5000.00
         cvtsi2sd xmm1, rax                  ;Lo convertimos a flotante para seguir manipulando el numero 
         subsd xmm0, xmm1                    ;Se resta la parte entera para obtener el decimal
         movsx eax, word[precision]          ;Aqui se guarda la precision, de cuantos 0
         cvtsi2sd xmm2, eax                  ; Aqui se establece cuantos 0 vamos a usar (en impresion)
         mulsd xmm0, xmm2                    ; Se multiplica residuo por los decimales
         cvttsd2si ebx, xmm0                 ; Guardamos el residuo en un entero para efectos de impresion
-        mov qword[resEuclidianResiduo], rbx ;Guardamos de la misma manera el residuo en una varibale 
+        mov qword[resEuclidianResiduo], rbx ;Guardamos de la misma manera el residuo en una varibale: 2 . 5000
 
         pop r14                             ;Prologo
         pop rax                             ;Prologo
@@ -638,19 +638,18 @@ global calcMahalanobis
                 addsd xmm3, xmm0                    ;Vamos guardando la sumatoria en otro registro
                 inc r12                             ;Incrementamos el indice para en la siguiente vuelta tomar otro valor (x)
                 loop sumaDiferencias                ;Si quedan saltos vuelve a tomar otro elemento y hacer el mismo proceso
-                ;---------------Ahora dividimos la suma entre el numero de elementos (suma(x-u)^2)/n
-                wtf:
+                ;---------------Ahora dividimos la suma entre el numero de elementos (suma(x-u)^2)/n-1
                 mov edx, 0
                 movsx eax, word[n]                  ;Cargamos el valor de elementos a un registro como flotante
                 cvtsi2sd xmm0, eax                  ;Lo convertimos a un registro flotante
                 movsx edx, word[decremento]
                 cvtsi2sd xmm12, edx       ;Cargar el valor a decrementar en xmm12
-                subsd xmm0, xmm12                   ; Decrementar xmm0 por xmm12
+                subsd xmm0, xmm12                   ; Decrementar xmm0 por xmm12 = N-1
                 divsd xmm3, xmm0                    ;Ahora dividimos el valor de la sumatoria de las diferencias entre el numero de elementos
                 ;---------------Finalmente calculamos la raiz para obtener la desviacion
                 sqrtsd xmm0, xmm3                   ;Guardamos el valor de la desviacion estandar en xmm0
                 ;---------------Fin de la primera desviacion estandar
-            desviacion2:                            ;Calcular la desviacion estandar del primer vector
+            desviacion2:                            ;Calcular la desviacion estandar del segundo vector
                 mov r12, 0                          ;Para evitar basura en el registro
                 mov rax, 0                          ;Para evitar basura en el registro
                 mov rbx, 0                          ;Para evitar basura en el registro
